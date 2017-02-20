@@ -1,8 +1,12 @@
 class Cell
   DIRECTIONS = [:u, :d, :l, :r, :ul, :ur, :dl, :dr].freeze
 
-  def self.from(cell, at: nil)
-    case at
+  def self.from(cell)
+    new(cell.x, cell.y)
+  end
+
+  def self.at(cell, direction)
+    case direction
     when :u
       new(cell.x, cell.y - 1)
     when :d
@@ -19,8 +23,6 @@ class Cell
       new(cell.x - 1, cell.y + 1)
     when :dr
       new(cell.x + 1, cell.y + 1)
-    else
-      new(cell.x, cell.y)
     end
   end
 

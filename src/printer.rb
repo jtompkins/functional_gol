@@ -3,8 +3,6 @@ class Printer
     x_range = Range.new(*cells.minmax_by(&:x).map(&:x))
     y_range = Range.new(*cells.minmax_by(&:y).map(&:y))
 
-    puts "X: #{x_range} Y: #{y_range}"
-
     x_range.each do |x|
       y_range.each do |y|
         print cells.include?(LiveCell.new(x, y)) ? 'X' : '.'
