@@ -2,7 +2,7 @@ require 'set'
 require 'codependent'
 
 require_relative './cell'
-require_relative './printer'
+require_relative '../printer'
 
 class GetNeighbors
   def call(cell)
@@ -11,11 +11,11 @@ class GetNeighbors
 end
 
 class CountLiveNeighbors
-  # def initialize(get_neighbors)
-  #   @get_neighbors = get_neighbors
-  # end
+  def initialize(get_neighbors:)
+    @get_neighbors = get_neighbors
+  end
 
-  attr_accessor :get_neighbors
+  attr_reader :get_neighbors
 
   def call(cell, live_cells)
     get_neighbors.(cell).count { |n| live_cells.include?(n) }
@@ -23,11 +23,11 @@ class CountLiveNeighbors
 end
 
 class IsAlive
-  # def initialize(count_live_neighbors)
-  #   @count_live_neighbors = count_live_neighbors
-  # end
+  def initialize(count_live_neighbors:)
+    @count_live_neighbors = count_live_neighbors
+  end
 
-  attr_accessor :count_live_neighbors
+  attr_reader :count_live_neighbors
 
   def call(cell, live_cells)
     case count_live_neighbors.(cell, live_cells)
@@ -40,12 +40,12 @@ class IsAlive
 end
 
 class Runner
-  # def initialize(get_neighbors, is_alive)
-  #   @get_neighbors = get_neighbors
-  #   @is_alive = is_alive
-  # end
+  def initialize(get_neighbors:, is_alive:)
+    @get_neighbors = get_neighbors
+    @is_alive = is_alive
+  end
 
-  attr_accessor :get_neighbors, :is_alive
+  attr_reader :get_neighbors, :is_alive
 
   def call(live_cells)
     live_cells
@@ -57,27 +57,27 @@ end
 
 container = Codependent::Container.new do
   singleton :printer do
-    with_value Printer.new
+    from_value Printer.new
   end
 
   singleton :get_neighbors do
-    with_value GetNeighbors.new
+    from_type GetNeighbors
   end
 
   singleton :count_live_neighbors do
-    with_value CountLiveNeighbors.new
+    from_type CountLiveNeighbors
 
     depends_on :get_neighbors
   end
 
   singleton :is_alive do
-    with_value IsAlive.new
+    from_type IsAlive
 
     depends_on :count_live_neighbors
   end
 
   singleton :runner do
-    with_value Runner.new
+    from_type Runner
 
     depends_on :get_neighbors, :is_alive
   end

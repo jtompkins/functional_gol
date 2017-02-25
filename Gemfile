@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
-gem 'Codependent'
+gem 'codependent'
+gem 'pry'
+gem 'pry-byebug'
